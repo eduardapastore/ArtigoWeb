@@ -6,6 +6,9 @@
   <title>Artigos Web</title>
 
   <link rel="stylesheet" href="style.css">
+
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -17,25 +20,11 @@
     <div class="card">
       <h2>Artigos</h2>
 
-      <form id="formArtigos">
-        <input type="text" id="tituloArtigo" placeholder="Título do artigo" required>
-
-        <textarea 
-          id="descricaoArtigo" 
-          placeholder="Descrição"
-        ></textarea>
-
-        <button type="submit">
-          Adicionar Artigo
-        </button>
-      </form>
-
       <table>
         <thead>
           <tr>
             <th>Título</th>
             <th>Descrição</th>
-            <th>Ação</th>
           </tr>
         </thead>
 
@@ -47,31 +36,11 @@
     <div class="card">
       <h2>Autores</h2>
 
-      <form id="formAutores">
-        <input 
-          type="text" 
-          id="nomeAutor" 
-          placeholder="Nome do autor" 
-          required
-        >
-
-        <input 
-          type="email" 
-          id="emailAutor" 
-          placeholder="Email"
-        >
-
-        <button type="submit">
-          Adicionar Autor
-        </button>
-      </form>
-
       <table>
         <thead>
           <tr>
             <th>Nome</th>
             <th>Email</th>
-            <th>Ação</th>
           </tr>
         </thead>
 
@@ -83,24 +52,10 @@
     <div class="card">
       <h2>Palavras-Chave</h2>
 
-      <form id="formPalavras">
-        <input 
-          type="text" 
-          id="palavraChave" 
-          placeholder="Palavra-chave" 
-          required
-        >
-
-        <button type="submit">
-          Adicionar Palavra
-        </button>
-      </form>
-
       <table>
         <thead>
           <tr>
             <th>Palavra</th>
-            <th>Ação</th>
           </tr>
         </thead>
 
@@ -112,23 +67,10 @@
     <div class="card">
       <h2>Referências</h2>
 
-      <form id="formReferencias">
-        <textarea 
-          id="referenciaTexto" 
-          placeholder="Digite a referência"
-          required
-        ></textarea>
-
-        <button type="submit">
-          Adicionar Referência
-        </button>
-      </form>
-
       <table>
         <thead>
           <tr>
             <th>Referência</th>
-            <th>Ação</th>
           </tr>
         </thead>
 
