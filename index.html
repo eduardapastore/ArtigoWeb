@@ -1,11 +1,143 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Artigo Web</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artigos Web</title>
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+
+  <h1>Sistema de Gerenciamento de Artigos</h1>
+
+  <div class="container">
+
+    <!-- ARTIGOS -->
+    <div class="card">
+      <h2>Artigos</h2>
+
+      <form id="formArtigos">
+        <input type="text" id="tituloArtigo" placeholder="Título do artigo" required>
+
+        <textarea 
+          id="descricaoArtigo" 
+          placeholder="Descrição"
+        ></textarea>
+
+        <button type="submit">
+          Adicionar Artigo
+        </button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Título</th>
+            <th>Descrição</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabelaArtigos"></tbody>
+      </table>
+    </div>
+
+    <!-- AUTORES -->
+    <div class="card">
+      <h2>Autores</h2>
+
+      <form id="formAutores">
+        <input 
+          type="text" 
+          id="nomeAutor" 
+          placeholder="Nome do autor" 
+          required
+        >
+
+        <input 
+          type="email" 
+          id="emailAutor" 
+          placeholder="Email"
+        >
+
+        <button type="submit">
+          Adicionar Autor
+        </button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabelaAutores"></tbody>
+      </table>
+    </div>
+
+    <!-- PALAVRAS-CHAVE -->
+    <div class="card">
+      <h2>Palavras-Chave</h2>
+
+      <form id="formPalavras">
+        <input 
+          type="text" 
+          id="palavraChave" 
+          placeholder="Palavra-chave" 
+          required
+        >
+
+        <button type="submit">
+          Adicionar Palavra
+        </button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Palavra</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabelaPalavras"></tbody>
+      </table>
+    </div>
+
+    <!-- REFERÊNCIAS -->
+    <div class="card">
+      <h2>Referências</h2>
+
+      <form id="formReferencias">
+        <textarea 
+          id="referenciaTexto" 
+          placeholder="Digite a referência"
+          required
+        ></textarea>
+
+        <button type="submit">
+          Adicionar Referência
+        </button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Referência</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+
+        <tbody id="tabelaReferencias"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
