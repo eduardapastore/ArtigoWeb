@@ -8,10 +8,17 @@
 }
 
 body{
-  background:#f4f7fb;
+  background:#1f2937;
   padding:40px;
-  color:#1f2937;
+  color: #f4f7fb;
   font-family: 'DM Sans', sans-serif;
+}
+
+.flex{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom:30px;
 }
 
 h1{
@@ -23,13 +30,6 @@ h1{
   display:grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap:25px;
-}
-
-.card{
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
 .card h2{
@@ -53,6 +53,12 @@ button{
   outline:none;
 }
 
+.buttons{
+  display:flex;
+  gap:10px;
+  justify-content: space-between;
+}
+
 textarea{
   resize:none;
   height:70px;
@@ -65,6 +71,7 @@ button{
   cursor:pointer;
   font-weight:bold;
   transition:0.2s;
+  margin-bottom: 12px;
 }
 
 button:hover{
@@ -74,18 +81,20 @@ button:hover{
 table{
   width:100%;
   border-collapse:collapse;
+  margin-bottom: 16px;
 }
 
 th,
 td{
-  border:1px solid #e5e7eb;
+  border-radius: 8px;
   padding:10px;
   text-align:left;
   font-size:14px;
+  border: 1px solid #fff;
 }
 
 th{
-  background:#eff6ff;
+  background:#000;
 }
 
 .delete-btn{
