@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Artigos Web</title>
 
   <link rel="stylesheet" href="style.css">
 
-  <!-- FONTE DM SANS -->
+  <!-- DM SANS -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -19,17 +20,45 @@
   <!-- SUPABASE -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
 
-  <h1>Sistema de Gerenciamento de Artigos</h1>
+  <main class="main">
 
-  <div class="container">
+    <div class="flex">
+        <h1>Sistema de Gerenciamento de Artigos</h1>
 
-    <!-- ARTIGOS -->
-    <div class="card">
-      <h2>Artigos</h2>
+        <button onclick="mostrarTabela('referencias')">
+            Carregar Dados
+        </button>
+    </div>
 
-      <table>
+    <!-- BOTÕES -->
+    <div class="buttons">
+
+      <button onclick="mostrarTabela('artigos')">
+        Artigos
+      </button>
+
+      <button onclick="mostrarTabela('autores')">
+        Autores
+      </button>
+
+      <button onclick="mostrarTabela('palavras')">
+        Palavra-Chave
+      </button>
+
+      <button onclick="mostrarTabela('referencias')">
+        Referências
+      </button>
+
+    </div>
+
+    <!-- TABELA -->
+    <div class="table-container">
+
+      <!-- ARTIGOS -->
+      <table id="artigos" class="tabela hidden">
         <thead>
           <tr>
             <th>Título</th>
@@ -39,29 +68,20 @@
 
         <tbody id="tabelaArtigos"></tbody>
       </table>
-    </div>
 
-    <!-- AUTORES -->
-    <div class="card">
-      <h2>Autores</h2>
-
-      <table>
+      <!-- AUTORES -->
+      <table id="autores" class="tabela hidden">
         <thead>
           <tr>
             <th>Nome</th>
-            <th>Email</th>
           </tr>
         </thead>
 
         <tbody id="tabelaAutores"></tbody>
       </table>
-    </div>
 
-    <!-- PALAVRAS-CHAVE -->
-    <div class="card">
-      <h2>Palavras-Chave</h2>
-
-      <table>
+      <!-- PALAVRAS -->
+      <table id="palavras" class="tabela hidden">
         <thead>
           <tr>
             <th>Palavra</th>
@@ -70,13 +90,9 @@
 
         <tbody id="tabelaPalavras"></tbody>
       </table>
-    </div>
 
-    <!-- REFERÊNCIAS -->
-    <div class="card">
-      <h2>Referências</h2>
-
-      <table>
+      <!-- REFERÊNCIAS -->
+      <table id="referencias" class="tabela hidden">
         <thead>
           <tr>
             <th>Referência</th>
@@ -85,9 +101,10 @@
 
         <tbody id="tabelaReferencias"></tbody>
       </table>
+
     </div>
 
-  </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
