@@ -6,13 +6,13 @@ app.use(cors());
 app.use(express.json());
 
 // Rotas
-const AutorBd = require('./artigo/Autor');
+const AutorBd = require('./Autor');
 app.use('/Autor', AutorBd);
-const Artigo_autorBd = require('./artigo/Autor');
+const Artigo_autorBd = require('./Artigo_autor');
 app.use('/Artigo_autor', Artigo_autorBd);
-const ArtigoBd = require('./artigo/Artigo');
+const ArtigoBd = require('./Artigo');
 app.use('/Artigo', ArtigoBd);
-const ReferenciaBd = require('./artigo/Referencia');
+const ReferenciaBd = require('./Referencia');
 app.use('/Referencia', ReferenciaBd);
 
 
