@@ -1,83 +1,140 @@
-const container =
-document.getElementById("articles");
+alert("script.js carregou!");
+
+console.log("script.js carregou!");
+
+const container = document.getElementById("articles");
 
 let articles = [];
 
 async function loadArticles(){
 
-const { data, error } =
-await supabaseClient
-.from("csvarticles")
-.select("*");
+  const { data, error } =
+  await supabaseClient
+  .from("csvarticles")
+  .select("*");
 
-if(error){
+  console.log("DATA:", data);
+  console.log("ERROR:", error);
 
-console.error(error);
+  if(error){
+    console.error(error);
+    return;
+  }
 
-return;
+  articles = data;
+
+  if(data.length > 0){
+    console.log("PRIMEIRO ARTIGO:", data[0]);
+    console.log("COLUNAS:", Object.keys(data[0]));
+  }
+
+  renderArticles(data);
 
 }
 
-articles = data;
+function renderArticles(list){
 
-renderArticles(data);
+    container.innerHTML = "";
+
+    list.forEach(article => {
+
+        const tr =
+        document.createElement("tr");
+
+        tr.innerHTML = `
+
+            <td>
+                ${article.title || article.Title || "-"}
+            </td>
+
+            <td>
+                ${article.authors || article.Authors || "-"}
+            </td>
+
+            <td>
+                ${article.affiliations || article.Affiliations || "-"}
+            </td>
+
+            <td>
+                ${article.year || article.Year || "-"}
+            </td>
+
+            <td>
+                ${article.source_title || article["Source title"] || "-"}
+            </td>
+
+            <td>
+
+                <button
+                    class="action-btn"
+                    onclick='showArticle(${JSON.stringify(article)})'
+                >
+                    Ver
+                </button>
+
+            </td>
+
+        `;
+
+        container.appendChild(tr);
+
+    });
 
 }
 
 loadArticles();
 
-function renderArticles(list){
+const themeButton =
+document.getElementById("themeToggle");
 
-container.innerHTML = "";
+const savedTheme =
+localStorage.getItem("theme");
 
-list.forEach(article => {
+if(savedTheme){
 
-const card =
-document.createElement("div");
+    document.documentElement
+    .setAttribute(
+        "data-theme",
+        savedTheme
+    );
 
-card.className = "card";
-
-card.innerHTML = `
-<h2>${article.title}</h2>
-
-<p class="affiliation">
-${article.affiliation}
-</p>
-
-<p>
-${article.abstract}
-</p>
-`;
-
-container.appendChild(card);
-
-});
+    updateIcon(savedTheme);
 
 }
 
-const searchInput =
-document.getElementById("search");
+themeButton.addEventListener(
+"click",
+()=>{
 
-if(searchInput){
+    const currentTheme =
+    document.documentElement
+    .getAttribute("data-theme");
 
-  searchInput.addEventListener(
-  "input",
-  ()=>{
+    const newTheme =
+    currentTheme === "dark"
+    ? "light"
+    : "dark";
 
-    const term =
-    searchInput.value.toLowerCase();
-
-    const filtered =
-    articles.filter(article =>
-
-      article.title
-      .toLowerCase()
-      .includes(term)
-
+    document.documentElement
+    .setAttribute(
+        "data-theme",
+        newTheme
     );
 
-    renderArticles(filtered);
+    localStorage.setItem(
+        "theme",
+        newTheme
+    );
 
-  });
+    updateIcon(newTheme);
+
+});
+
+function updateIcon(theme){
+
+    themeButton.textContent =
+    theme === "dark"
+    ? "☀️"
+    : "🌙";
 
 }

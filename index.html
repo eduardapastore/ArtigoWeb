@@ -1,59 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Biblioteca Científica</title>
+    <title>Biblioteca Científica</title>
 
-<link rel="stylesheet" href="style.css">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script src="supabase.js"></script>
-
-<script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<header>
+    <header>
 
-<h1>Biblioteca Científica</h1>
+        <h1>📚 Biblioteca Científica</h1>
 
-<a href="admin.html">
-Adicionar Artigo
-</a>
+        <div class="header-actions">
 
-</header>
+            <button id="themeToggle">
+                🌙
+            </button>
 
-<section class="search-container">
+            <a href="admin.html">
+                Adicionar Artigo
+            </a>
 
-<input
-id="search"
-type="text"
-placeholder="Pesquisar artigos..."
->
+        </div>
 
-</section>
+    </header>
 
-<section id="articles">
+    <section class="search-container">
 
-</section>
+        <input
+            id="search"
+            type="text"
+            placeholder="Pesquisar por título, autor ou instituição..."
+        >
 
-<div id="modal" class="modal hidden">
+    </section>
 
-<div class="modal-content">
+    <div class="table-container">
 
-<span id="close">&times;</span>
+        <table id="articlesTable">
 
-<div id="modal-body"></div>
+            <thead>
 
-</div>
+                <tr>
+                    <th>Título</th>
+                    <th>Autores</th>
+                    <th>Filiação</th>
+                    <th>Ano</th>
+                    <th>Fonte</th>
+                    <th>Ações</th>
+                </tr>
 
-</div>
+            </thead>
+
+            <tbody id="articles">
+
+                <!-- Os artigos serão inseridos aqui pelo JavaScript -->
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- Modal -->
+
+    <div id="modal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <span id="close">&times;</span>
+
+            <div id="modal-body"></div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="script.js"></script>
 
 </body>
+
 </html>

@@ -94,63 +94,46 @@ importarCSV
 
 async function importarCSV(){
 
-const file =
-document.getElementById("csvFile")
-.files[0];
+  const file =
+  document.getElementById("csvFile").files[0];
 
-if(!file){
+  Papa.parse(file,{
 
-alert("Selecione um CSV");
+    header:true,
+    skipEmptyLines:true,
 
-return;
+    complete: async function(results){
 
-}
+      const artigos =
+      results.data.map(row => ({
 
-Papa.parse(file,{
+        title: row["Title"],
+        authors: row["Authors"],
+        affiliation: row["Affiliations"],
+        abstract: row["Abstract"],
+        year: Number(row["Year"])
 
-header:true,
+      }));
 
-complete: async function(results){
+      console.log(artigos);
 
-const artigos =
-results.data.map(row => ({
+      const { error } =
+      await supabaseClient
+      .from("csvarticles")
+      .insert(artigos);
 
-title:
-row.Title,
+      if(error){
 
-authors:
-row.Authors,
+        console.error(error);
+        alert("Erro ao importar CSV");
+        return;
 
-affiliation:
-row.Affiliations,
+      }
 
-abstract:
-row.Abstract,
+      alert("CSV importado com sucesso!");
 
-year:
-Number(row.Year)
+    }
 
-}));
-
-const { error } =
-await supabaseClient
-.from("csvarticles")
-.insert(artigos);
-
-if(error){
-
-console.error(error);
-
-alert("Erro ao importar CSV");
-
-return;
-
-}
-
-alert("CSV importado!");
-
-}
-
-});
+  });
 
 }
