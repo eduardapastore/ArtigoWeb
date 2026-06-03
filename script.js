@@ -197,13 +197,13 @@ function showArticle(article) {
     const modal = document.getElementById("modal");
     const body = document.getElementById("modal-body");
 
-    const title = article.Title || article.title || "Sem título";
-    const authors = article.Authors || article.authors || "-";
-    const affiliation = article.Affiliations || article.affiliations || "-";
-    const year = article.Year || article.year || "-";
-    const journal = article["Source title"] || article.source_title || "-";
+    const title = article.Title || "Sem título";
+    const authors = article.Authors || "-";
+    const affiliation = article.Affiliations || "-";
+    const year = article.Year || "-";
+    const journal = article["Source title"] || "-";
     const doi = article.DOI || "-";
-    const abstract = article.Abstract || article.abstract || "-";
+    const abstract = article.Abstract || "-";
     const link = article.Link || "#";
 
     body.innerHTML = `
@@ -286,6 +286,108 @@ if (themeButton) {
 }
 
 // ===========================
+// CLEAN HELPERS (CORRIGIDO)
+// ===========================
+
+function isEmpty(value) {
+    return value === null ||
+        value === undefined ||
+        String(value).trim() === "";
+}
+
+// ===========================
+// DELETE ISBN / ISSN (CORRIGIDO)
+// ===========================
+
+async function deleteMissingISBNISSNHandler() {
+
+    const ok = confirm("🚫 Remover artigos sem ISBN ou ISSN?");
+    if (!ok) return;
+
+    const { data, error } = await supabaseClient
+        .from("csvarticles")
+        .select("id, \"ISBN\", \"ISSN\"");
+
+    if (error) {
+        console.error(error);
+        showError("Erro ao buscar artigos");
+        return;
+    }
+
+    const toDelete = data.filter(article => {
+        const isbnMissing = isEmpty(article.ISBN);
+        const issnMissing = isEmpty(article.ISSN);
+        return isbnMissing || issnMissing;
+    });
+
+    const ids = toDelete.map(a => a.id);
+
+    if (!ids.length) {
+        showSuccess("Nenhum artigo sem ISBN/ISSN encontrado!");
+        return;
+    }
+
+    const { error: deleteError } = await supabaseClient
+        .from("csvarticles")
+        .delete()
+        .in("id", ids);
+
+    if (deleteError) {
+        console.error(deleteError);
+        showError("Erro ao deletar artigos");
+        return;
+    }
+
+    showSuccess(`${ids.length} artigos removidos com sucesso!`);
+    loadArticles();
+}
+
+// ===========================
+// DELETE DOI (CORRIGIDO)
+// ===========================
+
+async function deleteMissingDOIHandler() {
+
+    const ok = confirm("🚫 Remover artigos sem DOI?");
+    if (!ok) return;
+
+    const { data, error } = await supabaseClient
+        .from("csvarticles")
+        .select("DOI");
+
+    if (error) {
+        console.error(error);
+        showError("Erro ao buscar artigos");
+        return;
+    }
+
+    const toDelete = data.filter(article =>
+        !article.DOI || String(article.DOI).trim() === ""
+    );
+
+    const ids = toDelete.map(a => a.id);
+
+    if (!ids.length) {
+        showSuccess("Nenhum artigo sem DOI encontrado!");
+        return;
+    }
+
+    const { error: deleteError } = await supabaseClient
+        .from("csvarticles")
+        .delete()
+        .in("id", ids);
+
+    if (deleteError) {
+        console.error(deleteError);
+        showError("Erro ao deletar artigos");
+        return;
+    }
+
+    showSuccess(`${ids.length} artigos removidos com sucesso!`);
+    loadArticles();
+}
+
+// ===========================
 // INIT
 // ===========================
 
@@ -297,3 +399,5 @@ document.addEventListener("DOMContentLoaded", loadArticles);
 
 document.getElementById("deleteAllBtn")?.addEventListener("click", deleteAllArticles);
 document.getElementById("deleteNoAbstractBtn")?.addEventListener("click", deleteNoAbstractArticles);
+document.getElementById("deleteISBNISSN")?.addEventListener("click", deleteMissingISBNISSNHandler);
+document.getElementById("deleteMissingDOI")?.addEventListener("click", deleteMissingDOIHandler);
