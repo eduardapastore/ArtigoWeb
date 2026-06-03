@@ -14,6 +14,9 @@
 
 <body>
 
+    <!-- ===========================
+         HEADER
+    =========================== -->
     <header>
 
         <h1>📚 Biblioteca Científica</h1>
@@ -32,6 +35,9 @@
 
     </header>
 
+    <!-- ===========================
+         SEARCH
+    =========================== -->
     <section class="search-container">
 
         <input
@@ -42,26 +48,49 @@
 
     </section>
 
+    <!-- ===========================
+         SIDEBAR (TRATAMENTO DE DADOS)
+    =========================== -->
+    <aside class="sidebar">
+
+        <h3 class="sidebar-title">🧹 Tratamento de Dados</h3>
+
+        <p class="sidebar-subtitle">
+            Ações rápidas para limpeza da base
+        </p>
+
+        <div class="sidebar-actions">
+
+            <button id="deleteNoAbstractBtn" class="warning-btn">
+                🚫 Remover sem Abstract
+            </button>
+
+        </div>
+
+    </aside>
+
+    <!-- ===========================
+         TABELA
+    =========================== -->
     <div class="table-container">
 
         <table id="articlesTable">
 
             <thead id="tableHead">
-
-                <!-- Cabeçalho criado pelo JS -->
-
+                <!-- Criado via JS -->
             </thead>
 
             <tbody id="articles">
-
-                <!-- Artigos criados pelo JS -->
-
+                <!-- Criado via JS -->
             </tbody>
 
         </table>
 
     </div>
 
+    <!-- ===========================
+         MODAL
+    =========================== -->
     <div id="modal" class="modal hidden">
 
         <div class="modal-content">
@@ -74,10 +103,12 @@
 
     </div>
 
+    <!-- ===========================
+         SCRIPTS
+    =========================== -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script src="supabase.js"></script>
-
     <script src="script.js"></script>
 
 </body>

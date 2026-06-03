@@ -474,3 +474,133 @@ header a:hover{
     }
 
 }
+
+/* ===========================
+   AÇÕES DA TABELA
+=========================== */
+
+.actions-cell{
+    display:flex;
+    gap:8px;
+}
+
+/* BOTÃO BASE */
+.btn{
+    border:none;
+    padding:8px 14px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    font-size:0.85rem;
+    transition:0.2s;
+}
+
+/* VER */
+.view-btn{
+    background:var(--primary);
+    color:white;
+}
+
+.view-btn:hover{
+    background:var(--primary-dark);
+}
+
+/* EXCLUIR */
+.delete-btn{
+    background:#ef4444;
+    color:white;
+}
+
+.delete-btn:hover{
+    background:#dc2626;
+}
+
+.sidebar{
+    position: fixed;
+    top: 120px;
+    left: 20px;
+    width: 220px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.sidebar h3{
+    margin-bottom: 12px;
+    font-size: 1rem;
+}
+
+.sidebar button{
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.sidebar{
+    position: fixed;
+    top: 120px;
+    left: 20px;
+    width: 240px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: var(--shadow);
+}
+
+.sidebar-title{
+    font-size: 1rem;
+    margin-bottom: 6px;
+}
+
+.sidebar-subtitle{
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 16px;
+}
+
+.sidebar-actions{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar button{
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+/* perigo */
+.danger-btn{
+    background: #ef4444;
+    color: white;
+}
+
+.danger-btn:hover{
+    background: #dc2626;
+}
+
+/* aviso */
+.warning-btn{
+    background: #f59e0b;
+    color: white;
+}
+
+.warning-btn:hover{
+    background: #d97706;
+}
+
+/* empurra tabela pra não ficar atrás da sidebar */
+.table-container{
+    margin-left: 280px;
+}
