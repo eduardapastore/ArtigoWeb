@@ -1,108 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
-
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family: 'DM Sans', sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
 }
 
 body{
-  background:#1f2937;
-  padding:40px;
-  color: #f4f7fb;
-  font-family: 'DM Sans', sans-serif;
+background:#f5f7fb;
+padding:40px;
 }
 
-.flex{
-  display:flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom:30px;
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
 }
 
-h1{
-  text-align:center;
-  margin-bottom:30px;
+header a{
+background:#2563eb;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+text-decoration:none;
 }
 
-.container{
-  display:grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap:25px;
+#search{
+width:100%;
+padding:15px;
+border-radius:10px;
+border:1px solid #ddd;
+margin-bottom:30px;
+}
+
+#articles{
+display:grid;
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,.05);
+cursor:pointer;
 }
 
 .card h2{
-  margin-bottom:15px;
-  font-size:22px;
+margin-bottom:10px;
 }
 
-form{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-bottom:20px;
+.affiliation{
+color:#666;
+margin-bottom:10px;
 }
 
-input,
-textarea,
-button{
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #d1d5db;
-  outline:none;
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.7);
+
+display:flex;
+align-items:center;
+justify-content:center;
 }
 
-.buttons{
-  display:flex;
-  gap:10px;
-  justify-content: space-between;
+.hidden{
+display:none;
 }
 
-textarea{
-  resize:none;
-  height:70px;
+.modal-content{
+background:white;
+padding:30px;
+border-radius:20px;
+width:90%;
+max-width:900px;
+max-height:90vh;
+overflow:auto;
 }
 
-button{
-  background:#2563eb;
-  color:white;
-  border:none;
-  cursor:pointer;
-  font-weight:bold;
-  transition:0.2s;
-  margin-bottom: 12px;
-}
-
-button:hover{
-  background:#1d4ed8;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-bottom: 16px;
-}
-
-th,
-td{
-  border-radius: 8px;
-  padding:10px;
-  text-align:left;
-  font-size:14px;
-  border: 1px solid #fff;
-}
-
-th{
-  background:#000;
-}
-
-.delete-btn{
-  background:#ef4444;
-  padding:6px 10px;
-  font-size:12px;
-}
-
-.delete-btn:hover{
-  background:#dc2626;
+#close{
+float:right;
+font-size:30px;
+cursor:pointer;
 }

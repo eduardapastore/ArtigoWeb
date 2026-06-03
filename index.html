@@ -1,111 +1,59 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Artigos Web</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="style.css">
+<title>Biblioteca Científica</title>
 
-  <!-- DM SANS -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="style.css">
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  >
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- SUPABASE -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
+
+<script src="script.js"></script>
+
 </head>
 
 <body>
 
-  <main class="main">
+<header>
 
-    <div class="flex">
-        <h1>Sistema de Gerenciamento de Artigos</h1>
+<h1>Biblioteca Científica</h1>
 
-        <button onclick="mostrarTabela('referencias')">
-            Carregar Dados
-        </button>
-    </div>
+<a href="admin.html">
+Adicionar Artigo
+</a>
 
-    <!-- BOTÕES -->
-    <div class="buttons">
+</header>
 
-      <button onclick="mostrarTabela('artigos')">
-        Artigos
-      </button>
+<section class="search-container">
 
-      <button onclick="mostrarTabela('autores')">
-        Autores
-      </button>
+<input
+id="search"
+type="text"
+placeholder="Pesquisar artigos..."
+>
 
-      <button onclick="mostrarTabela('palavras')">
-        Palavra-Chave
-      </button>
+</section>
 
-      <button onclick="mostrarTabela('referencias')">
-        Referências
-      </button>
+<section id="articles">
 
-    </div>
+</section>
 
-    <!-- TABELA -->
-    <div class="table-container">
+<div id="modal" class="modal hidden">
 
-      <!-- ARTIGOS -->
-      <table id="artigos" class="tabela hidden">
-        <thead>
-          <tr>
-            <th>Título</th>
-            <th>Descrição</th>
-          </tr>
-        </thead>
+<div class="modal-content">
 
-        <tbody id="tabelaArtigos"></tbody>
-      </table>
+<span id="close">&times;</span>
 
-      <!-- AUTORES -->
-      <table id="autores" class="tabela hidden">
-        <thead>
-          <tr>
-            <th>Nome</th>
-          </tr>
-        </thead>
+<div id="modal-body"></div>
 
-        <tbody id="tabelaAutores"></tbody>
-      </table>
+</div>
 
-      <!-- PALAVRAS -->
-      <table id="palavras" class="tabela hidden">
-        <thead>
-          <tr>
-            <th>Palavra</th>
-          </tr>
-        </thead>
+</div>
 
-        <tbody id="tabelaPalavras"></tbody>
-      </table>
-
-      <!-- REFERÊNCIAS -->
-      <table id="referencias" class="tabela hidden">
-        <thead>
-          <tr>
-            <th>Referência</th>
-          </tr>
-        </thead>
-
-        <tbody id="tabelaReferencias"></tbody>
-      </table>
-
-    </div>
-
-  </main>
-
-  <script src="script.js"></script>
 </body>
 </html>

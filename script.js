@@ -1,102 +1,83 @@
-const API = "http://localhost:3000";
+const container =
+document.getElementById("articles");
 
-// =========================
-// MOSTRAR TABELAS
-// =========================
-function mostrarTabela(id) {
-  document.querySelectorAll(".tabela").forEach(t => {
-    t.classList.add("hidden");
-  });
+let articles = [];
 
-  document.getElementById(id).classList.remove("hidden");
+async function loadArticles(){
 
-  if (id === "artigos") carregarArtigos();
-  if (id === "autores") carregarAutores();
-  if (id === "referencias") carregarReferencias();
+const { data, error } =
+await supabaseClient
+.from("csvarticles")
+.select("*");
+
+if(error){
+
+console.error(error);
+
+return;
+
 }
 
-// =========================
-// LIMPAR TABELA
-// =========================
-function limparTabela(id) {
-  document.getElementById(id).innerHTML = "";
+articles = data;
+
+renderArticles(data);
+
 }
 
-// =========================
-// ARTIGOS
-// =========================
-async function carregarArtigos() {
-  const res = await fetch(`${API}/Artigo`);
-  const data = await res.json();
+loadArticles();
 
-  limparTabela("tabelaArtigos");
+function renderArticles(list){
 
-  data.forEach(item => {
-    criarLinha("tabelaArtigos", [
-      item.titulo,
-      item.descricao
-    ]);
-  });
+container.innerHTML = "";
+
+list.forEach(article => {
+
+const card =
+document.createElement("div");
+
+card.className = "card";
+
+card.innerHTML = `
+<h2>${article.title}</h2>
+
+<p class="affiliation">
+${article.affiliation}
+</p>
+
+<p>
+${article.abstract}
+</p>
+`;
+
+container.appendChild(card);
+
+});
+
 }
 
-// =========================
-// AUTORES
-// =========================
-async function carregarAutores() {
-  const res = await fetch(`${API}/Autor`);
-  const data = await res.json();
+const searchInput =
+document.getElementById("search");
 
-  limparTabela("tabelaAutores");
+if(searchInput){
 
-  data.forEach(item => {
-    criarLinha("tabelaAutores", [
-      item.nome
-    ]);
-  });
-}
+  searchInput.addEventListener(
+  "input",
+  ()=>{
 
-// =========================
-// REFERÊNCIAS
-// =========================
-async function carregarReferencias() {
-  const res = await fetch(`${API}/Referencia`);
-  const data = await res.json();
+    const term =
+    searchInput.value.toLowerCase();
 
-  limparTabela("tabelaReferencias");
+    const filtered =
+    articles.filter(article =>
 
-  data.forEach(item => {
-    criarLinha("tabelaReferencias", [
-      item.referencia
-    ]);
-  });
-}
+      article.title
+      .toLowerCase()
+      .includes(term)
 
-// =========================
-// FUNÇÃO GENÉRICA DE LINHA
-// =========================
-function criarLinha(tabelaId, valores) {
-  const tabela = document.getElementById(tabelaId);
+    );
 
-  const tr = document.createElement("tr");
+    renderArticles(filtered);
 
-  valores.forEach(valor => {
-    const td = document.createElement("td");
-    td.textContent = valor;
-    tr.appendChild(td);
   });
 
-  const tdAcao = document.createElement("td");
-
-  const btn = document.createElement("button");
-  btn.textContent = "Excluir";
-  btn.classList.add("delete-btn");
-
-  btn.onclick = () => {
-    tr.remove();
-  };
-
-  tdAcao.appendChild(btn);
-  tr.appendChild(tdAcao);
-
-  tabela.appendChild(tr);
 }
