@@ -301,44 +301,21 @@ function isEmpty(value) {
 
 async function deleteMissingISBNISSNHandler() {
 
-    const ok = confirm("🚫 Remover artigos sem ISBN ou ISSN?");
+    const ok = confirm("🚫 Remover artigos SEM ISBN E SEM ISSN?");
     if (!ok) return;
 
-    const { data, error } = await supabaseClient
+    const { error } = await supabaseClient
         .from("csvarticles")
-        .select("id, \"ISBN\", \"ISSN\"");
+        .delete()
+        .or('and(ISBN.is.null,ISSN.is.null),and(ISBN.eq.,ISSN.eq.)');
 
     if (error) {
         console.error(error);
-        showError("Erro ao buscar artigos");
+        showError("Erro ao remover artigos sem ISBN e ISSN");
         return;
     }
 
-    const toDelete = data.filter(article => {
-        const isbnMissing = isEmpty(article.ISBN);
-        const issnMissing = isEmpty(article.ISSN);
-        return isbnMissing || issnMissing;
-    });
-
-    const ids = toDelete.map(a => a.id);
-
-    if (!ids.length) {
-        showSuccess("Nenhum artigo sem ISBN/ISSN encontrado!");
-        return;
-    }
-
-    const { error: deleteError } = await supabaseClient
-        .from("csvarticles")
-        .delete()
-        .in("id", ids);
-
-    if (deleteError) {
-        console.error(deleteError);
-        showError("Erro ao deletar artigos");
-        return;
-    }
-
-    showSuccess(`${ids.length} artigos removidos com sucesso!`);
+    showSuccess("Artigos sem ISBN e ISSN removidos!");
     loadArticles();
 }
 
@@ -351,39 +328,18 @@ async function deleteMissingDOIHandler() {
     const ok = confirm("🚫 Remover artigos sem DOI?");
     if (!ok) return;
 
-    const { data, error } = await supabaseClient
+    const { error } = await supabaseClient
         .from("csvarticles")
-        .select("DOI");
+        .delete()
+        .or('DOI.is.null,DOI.eq.')
 
     if (error) {
         console.error(error);
-        showError("Erro ao buscar artigos");
+        showError("Erro ao remover artigos sem DOI");
         return;
     }
 
-    const toDelete = data.filter(article =>
-        !article.DOI || String(article.DOI).trim() === ""
-    );
-
-    const ids = toDelete.map(a => a.id);
-
-    if (!ids.length) {
-        showSuccess("Nenhum artigo sem DOI encontrado!");
-        return;
-    }
-
-    const { error: deleteError } = await supabaseClient
-        .from("csvarticles")
-        .delete()
-        .in("id", ids);
-
-    if (deleteError) {
-        console.error(deleteError);
-        showError("Erro ao deletar artigos");
-        return;
-    }
-
-    showSuccess(`${ids.length} artigos removidos com sucesso!`);
+    showSuccess("Artigos sem DOI removidos!");
     loadArticles();
 }
 
