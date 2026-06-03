@@ -2,115 +2,81 @@
 <html lang="pt-BR">
 
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Biblioteca Científica</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
 
-    <!-- ===========================
-         HEADER
-    =========================== -->
+    <!-- HEADER -->
     <header>
-
         <h1>📚 Biblioteca Científica</h1>
 
         <div class="header-actions">
+            <button id="themeToggle">🌙</button>
 
-            <button id="themeToggle">
-                🌙
-            </button>
-
-            <a href="admin.html">
-                Adicionar Artigo
-            </a>
-
+            <a href="admin.html">Adicionar Artigo</a>
         </div>
-
     </header>
 
-    <!-- ===========================
-         SEARCH
-    =========================== -->
+    <!-- SEARCH -->
     <section class="search-container">
-
-        <input
-            id="search"
-            type="text"
-            placeholder="Pesquisar artigos..."
-        >
-
+        <input id="search" type="text" placeholder="Pesquisar artigos...">
     </section>
 
-    <!-- ===========================
-         SIDEBAR (TRATAMENTO DE DADOS)
-    =========================== -->
-    <aside class="sidebar">
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="layout">
 
-        <h3 class="sidebar-title">🧹 Tratamento de Dados</h3>
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
 
-        <p class="sidebar-subtitle">
-            Ações rápidas para limpeza da base
-        </p>
+            <h3 class="sidebar-title">🧹 Tratamento de Dados</h3>
 
-        <div class="sidebar-actions">
+            <p class="sidebar-subtitle">
+                Limpeza e manutenção da base
+            </p>
 
-            <button id="deleteNoAbstractBtn" class="warning-btn">
-                🚫 Remover sem Abstract
-            </button>
+            <div class="sidebar-actions">
+
+                <button id="deleteNoAbstractBtn" class="warning-btn">
+                    🚫 Remover sem Abstract
+                </button>
+
+            </div>
+
+        </aside>
+
+        <!-- TABELA -->
+        <div class="table-container">
+
+            <table id="articlesTable">
+
+                <thead id="tableHead"></thead>
+
+                <tbody id="articles"></tbody>
+
+            </table>
 
         </div>
 
-    </aside>
-
-    <!-- ===========================
-         TABELA
-    =========================== -->
-    <div class="table-container">
-
-        <table id="articlesTable">
-
-            <thead id="tableHead">
-                <!-- Criado via JS -->
-            </thead>
-
-            <tbody id="articles">
-                <!-- Criado via JS -->
-            </tbody>
-
-        </table>
-
     </div>
 
-    <!-- ===========================
-         MODAL
-    =========================== -->
+    <!-- MODAL -->
     <div id="modal" class="modal hidden">
-
         <div class="modal-content">
-
             <span id="close">&times;</span>
-
             <div id="modal-body"></div>
-
         </div>
-
     </div>
 
-    <!-- ===========================
-         SCRIPTS
-    =========================== -->
+    <!-- SCRIPTS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
     <script src="supabase.js"></script>
     <script src="script.js"></script>
 
 </body>
-
 </html>

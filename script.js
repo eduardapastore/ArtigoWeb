@@ -97,7 +97,7 @@ async function deleteNoAbstractArticles() {
     const { error } = await supabaseClient
         .from("csvarticles")
         .delete()
-        .or("abstract.is.null,abstract.eq.''");
+        .or('Abstract.is.null,Abstract.eq.')
 
     if (error) {
         console.error(error);
