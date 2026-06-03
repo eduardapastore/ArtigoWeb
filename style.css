@@ -46,7 +46,6 @@ header a,
 .modal-content,
 #themeToggle,
 #articlesTable,
-#articlesTable tr,
 #articlesTable td,
 #articlesTable th{
 
@@ -68,7 +67,7 @@ body{
 
     min-height:100vh;
 
-    padding:50px 8%;
+    padding:40px;
 
 }
 
@@ -82,7 +81,7 @@ header{
 
     align-items:center;
 
-    margin-bottom:40px;
+    margin-bottom:35px;
 
 }
 
@@ -91,8 +90,6 @@ header h1{
     font-size:2rem;
 
     font-weight:700;
-
-    letter-spacing:-1px;
 
 }
 
@@ -114,7 +111,7 @@ header a{
 
     color:white;
 
-    padding:14px 24px;
+    padding:14px 22px;
 
     border-radius:12px;
 
@@ -128,7 +125,7 @@ header a:hover{
 
 }
 
-/* BOTÃO DE TEMA */
+/* BOTÃO TEMA */
 
 #themeToggle{
 
@@ -138,7 +135,7 @@ header a:hover{
 
     border:none;
 
-    border-radius:14px;
+    border-radius:12px;
 
     background:var(--surface);
 
@@ -162,7 +159,7 @@ header a:hover{
 
 .search-container{
 
-    margin-bottom:30px;
+    margin-bottom:25px;
 
 }
 
@@ -170,9 +167,9 @@ header a:hover{
 
     width:100%;
 
-    padding:18px 24px;
+    padding:18px 22px;
 
-    border-radius:16px;
+    border-radius:14px;
 
     border:1px solid var(--border);
 
@@ -194,71 +191,122 @@ header a:hover{
 
 }
 
-/* TABELA */
+/* CONTAINER DA TABELA */
 
 .table-container{
 
-    background:var(--surface);
+    width:100%;
 
-    border:1px solid var(--border);
+    overflow-x:auto;
+
+    overflow-y:auto;
+
+    max-height:75vh;
+
+    background:var(--surface);
 
     border-radius:20px;
 
-    overflow:hidden;
+    border:1px solid var(--border);
 
     box-shadow:var(--shadow);
 
 }
 
-#articlesTable{
+/* SCROLLBAR */
 
-    width:100%;
+.table-container::-webkit-scrollbar{
 
-    border-collapse:collapse;
+    height:12px;
+    width:12px;
 
 }
 
-#articlesTable thead{
+.table-container::-webkit-scrollbar-track{
+
+    background:var(--surface);
+
+}
+
+.table-container::-webkit-scrollbar-thumb{
 
     background:var(--primary);
 
-    color:white;
+    border-radius:20px;
+
+}
+
+/* TABELA */
+
+#articlesTable{
+
+    border-collapse:collapse;
+
+    width:max-content;
+
+    min-width:100%;
+
+}
+
+/* CABEÇALHO */
+
+#articlesTable thead{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:5;
 
 }
 
 #articlesTable th{
 
-    padding:18px;
+    background:var(--primary);
+
+    color:white;
+
+    padding:16px;
 
     text-align:left;
 
-    font-size:.95rem;
+    font-size:.9rem;
 
     font-weight:600;
 
+    border-right:1px solid rgba(255,255,255,.15);
+
+    white-space:nowrap;
+
 }
+
+/* CÉLULAS */
 
 #articlesTable td{
 
-    padding:18px;
+    padding:14px 16px;
 
     border-bottom:1px solid var(--border);
 
-    vertical-align:top;
+    border-right:1px solid var(--border);
+
+    white-space:nowrap;
+
+    max-width:250px;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
+
+    font-size:.9rem;
 
 }
 
-#articlesTable tbody tr{
-
-    transition:.25s;
-
-    cursor:pointer;
-
-}
+/* LINHAS */
 
 #articlesTable tbody tr:hover{
 
-    background:rgba(37,99,235,.06);
+    background:rgba(37,99,235,.08);
 
 }
 
@@ -280,35 +328,36 @@ header a:hover{
 
 }
 
-.title-cell{
+/* PRIMEIRA COLUNA FIXA */
 
-    min-width:400px;
+#articlesTable th:first-child,
+#articlesTable td:first-child{
 
-    max-width:500px;
+    position:sticky;
+
+    left:0;
+
+    background:var(--surface);
+
+    z-index:4;
+
+    min-width:350px;
+
+    max-width:350px;
 
     font-weight:600;
 
-    line-height:1.5;
+}
+
+#articlesTable th:first-child{
+
+    background:var(--primary);
+
+    color:white;
 
 }
 
-.authors-cell{
-
-    min-width:250px;
-
-    color:var(--text-light);
-
-}
-
-.affiliation-cell{
-
-    min-width:300px;
-
-    color:var(--text-light);
-
-}
-
-/* BOTÕES */
+/* BOTÃO */
 
 .action-btn{
 
@@ -368,17 +417,15 @@ header a:hover{
 
     color:var(--text);
 
-    width:min(1000px,90%);
+    width:min(1100px,95%);
 
-    max-height:85vh;
+    max-height:90vh;
 
     overflow-y:auto;
 
-    border-radius:24px;
+    border-radius:20px;
 
-    padding:40px;
-
-    box-shadow:0 30px 60px rgba(0,0,0,.25);
+    padding:35px;
 
 }
 
@@ -402,21 +449,11 @@ header a:hover{
 
 /* RESPONSIVO */
 
-@media(max-width:1200px){
-
-    .table-container{
-
-        overflow-x:auto;
-
-    }
-
-}
-
 @media(max-width:768px){
 
     body{
 
-        padding:25px 15px;
+        padding:20px;
 
     }
 
@@ -426,13 +463,13 @@ header a:hover{
 
         align-items:flex-start;
 
-        gap:20px;
+        gap:15px;
 
     }
 
-    #articlesTable{
+    .table-container{
 
-        min-width:1200px;
+        max-height:70vh;
 
     }
 

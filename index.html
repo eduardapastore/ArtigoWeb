@@ -37,7 +37,7 @@
         <input
             id="search"
             type="text"
-            placeholder="Pesquisar por título, autor ou instituição..."
+            placeholder="Pesquisar artigos..."
         >
 
     </section>
@@ -46,30 +46,21 @@
 
         <table id="articlesTable">
 
-            <thead>
+            <thead id="tableHead">
 
-                <tr>
-                    <th>Título</th>
-                    <th>Autores</th>
-                    <th>Filiação</th>
-                    <th>Ano</th>
-                    <th>Fonte</th>
-                    <th>Ações</th>
-                </tr>
+                <!-- Cabeçalho criado pelo JS -->
 
             </thead>
 
             <tbody id="articles">
 
-                <!-- Os artigos serão inseridos aqui pelo JavaScript -->
+                <!-- Artigos criados pelo JS -->
 
             </tbody>
 
         </table>
 
     </div>
-
-    <!-- Modal -->
 
     <div id="modal" class="modal hidden">
 
@@ -84,7 +75,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script src="supabase.js"></script>
+
     <script src="script.js"></script>
 
 </body>

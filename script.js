@@ -1,36 +1,87 @@
-alert("script.js carregou!");
+console.log("script.js carregado!");
 
-console.log("script.js carregou!");
-
-const container = document.getElementById("articles");
+const container =
+document.getElementById("articles");
 
 let articles = [];
 
+/* ===========================
+   CARREGAR ARTIGOS
+=========================== */
+
 async function loadArticles(){
 
-  const { data, error } =
-  await supabaseClient
-  .from("csvarticles")
-  .select("*");
+    const { data, error } =
+    await supabaseClient
+    .from("csvarticles")
+    .select("*");
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
+    console.log("DATA:", data);
+    console.log("ERROR:", error);
 
-  if(error){
-    console.error(error);
-    return;
-  }
+    if(error){
 
-  articles = data;
+        console.error(error);
 
-  if(data.length > 0){
-    console.log("PRIMEIRO ARTIGO:", data[0]);
-    console.log("COLUNAS:", Object.keys(data[0]));
-  }
+        return;
 
-  renderArticles(data);
+    }
+
+    articles = data;
+
+    if(data.length > 0){
+
+        createTableHeader(
+            Object.keys(data[0])
+        );
+
+    }
+
+    renderArticles(data);
 
 }
+
+/* ===========================
+   CRIAR CABEÇALHO
+=========================== */
+
+function createTableHeader(columns){
+
+    const head =
+    document.getElementById("tableHead");
+
+    head.innerHTML = "";
+
+    const tr =
+    document.createElement("tr");
+
+    columns.forEach(column => {
+
+        const th =
+        document.createElement("th");
+
+        th.textContent =
+        column;
+
+        tr.appendChild(th);
+
+    });
+
+    const actionTh =
+    document.createElement("th");
+
+    actionTh.textContent =
+    "Ações";
+
+    tr.appendChild(actionTh);
+
+    head.appendChild(tr);
+
+}
+
+/* ===========================
+   RENDERIZAR ARTIGOS
+=========================== */
 
 function renderArticles(list){
 
@@ -41,40 +92,54 @@ function renderArticles(list){
         const tr =
         document.createElement("tr");
 
-        tr.innerHTML = `
+        Object.entries(article)
+        .forEach(([key,value]) => {
 
-            <td>
-                ${article.title || article.Title || "-"}
-            </td>
+            const td =
+            document.createElement("td");
 
-            <td>
-                ${article.authors || article.Authors || "-"}
-            </td>
+            let text =
+            value ?? "-";
 
-            <td>
-                ${article.affiliations || article.Affiliations || "-"}
-            </td>
+            if(typeof text === "string" &&
+               text.length > 150){
 
-            <td>
-                ${article.year || article.Year || "-"}
-            </td>
+                text =
+                text.substring(0,150) +
+                "...";
 
-            <td>
-                ${article.source_title || article["Source title"] || "-"}
-            </td>
+            }
 
-            <td>
+            td.textContent =
+            text;
 
-                <button
-                    class="action-btn"
-                    onclick='showArticle(${JSON.stringify(article)})'
-                >
-                    Ver
-                </button>
+            tr.appendChild(td);
 
-            </td>
+        });
 
-        `;
+        const actionTd =
+        document.createElement("td");
+
+        const btn =
+        document.createElement("button");
+
+        btn.className =
+        "action-btn";
+
+        btn.textContent =
+        "Ver";
+
+        btn.addEventListener(
+        "click",
+        ()=>{
+
+            showArticle(article);
+
+        });
+
+        actionTd.appendChild(btn);
+
+        tr.appendChild(actionTd);
 
         container.appendChild(tr);
 
@@ -82,13 +147,132 @@ function renderArticles(list){
 
 }
 
-loadArticles();
+/* ===========================
+   MODAL
+=========================== */
+
+function showArticle(article){
+
+    const modal =
+    document.getElementById("modal");
+
+    const body =
+    document.getElementById("modal-body");
+
+    let html = "";
+
+    Object.entries(article)
+    .forEach(([key,value]) => {
+
+        html += `
+
+            <div style="
+                margin-bottom:20px;
+                border-bottom:1px solid #ddd;
+                padding-bottom:12px;
+            ">
+
+                <strong>
+                    ${key}
+                </strong>
+
+                <p>
+                    ${value ?? "-"}
+                </p>
+
+            </div>
+
+        `;
+
+    });
+
+    body.innerHTML = html;
+
+    modal.classList.remove(
+        "hidden"
+    );
+
+}
+
+/* ===========================
+   FECHAR MODAL
+=========================== */
+
+const closeButton =
+document.getElementById("close");
+
+if(closeButton){
+
+    closeButton.addEventListener(
+    "click",
+    ()=>{
+
+        document
+        .getElementById("modal")
+        .classList.add(
+            "hidden"
+        );
+
+    });
+
+}
+
+/* ===========================
+   PESQUISA
+=========================== */
+
+const searchInput =
+document.getElementById("search");
+
+if(searchInput){
+
+    searchInput.addEventListener(
+    "input",
+    ()=>{
+
+        const term =
+        searchInput.value
+        .toLowerCase();
+
+        const filtered =
+        articles.filter(article =>
+
+            JSON.stringify(article)
+            .toLowerCase()
+            .includes(term)
+
+        );
+
+        renderArticles(
+            filtered
+        );
+
+    });
+
+}
+
+/* ===========================
+   TEMA
+=========================== */
 
 const themeButton =
-document.getElementById("themeToggle");
+document.getElementById(
+    "themeToggle"
+);
+
+function updateIcon(theme){
+
+    themeButton.textContent =
+    theme === "dark"
+    ? "☀️"
+    : "🌙";
+
+}
 
 const savedTheme =
-localStorage.getItem("theme");
+localStorage.getItem(
+    "theme"
+);
 
 if(savedTheme){
 
@@ -102,39 +286,44 @@ if(savedTheme){
 
 }
 
-themeButton.addEventListener(
-"click",
-()=>{
+if(themeButton){
 
-    const currentTheme =
-    document.documentElement
-    .getAttribute("data-theme");
+    themeButton.addEventListener(
+    "click",
+    ()=>{
 
-    const newTheme =
-    currentTheme === "dark"
-    ? "light"
-    : "dark";
+        const currentTheme =
+        document.documentElement
+        .getAttribute(
+            "data-theme"
+        );
 
-    document.documentElement
-    .setAttribute(
-        "data-theme",
-        newTheme
-    );
+        const newTheme =
+        currentTheme === "dark"
+        ? "light"
+        : "dark";
 
-    localStorage.setItem(
-        "theme",
-        newTheme
-    );
+        document.documentElement
+        .setAttribute(
+            "data-theme",
+            newTheme
+        );
 
-    updateIcon(newTheme);
+        localStorage.setItem(
+            "theme",
+            newTheme
+        );
 
-});
+        updateIcon(
+            newTheme
+        );
 
-function updateIcon(theme){
-
-    themeButton.textContent =
-    theme === "dark"
-    ? "☀️"
-    : "🌙";
+    });
 
 }
+
+/* ===========================
+   INICIAR
+=========================== */
+
+loadArticles();
