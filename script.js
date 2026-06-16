@@ -37,8 +37,8 @@ function showError(message) {
 async function loadArticles() {
 
     const { data, error } = await supabaseClient
-        .from("csvarticles")
-        .select("*");
+    .from("vw_artigos_frontend")
+    .select("*");
 
     console.log("DATA:", data);
     console.log("ERROR:", error);
@@ -71,7 +71,7 @@ async function deleteAllArticles() {
     if (!ok2) return;
 
     const { error } = await supabaseClient
-        .from("csvarticles")
+    .from("artigos")
         .delete()
         .neq("id", 0);
 
@@ -91,21 +91,29 @@ async function deleteAllArticles() {
 
 async function deleteNoAbstractArticles() {
 
-    const ok = confirm("⚠️ Remover artigos sem abstract?");
+    const ok = confirm(
+        "⚠️ Remover artigos sem abstract?"
+    );
+
     if (!ok) return;
 
     const { error } = await supabaseClient
-        .from("csvarticles")
+        .from("artigos")
         .delete()
-        .or('Abstract.is.null,Abstract.eq.')
+        .or('abstract.is.null,abstract.eq.');
 
     if (error) {
         console.error(error);
-        showError("Erro ao remover artigos sem abstract");
+        showError(
+            "Erro ao remover artigos sem abstract"
+        );
         return;
     }
 
-    showSuccess("Artigos sem abstract removidos!");
+    showSuccess(
+        "Artigos sem abstract removidos!"
+    );
+
     loadArticles();
 }
 
@@ -301,21 +309,27 @@ function isEmpty(value) {
 
 async function deleteMissingISBNISSNHandler() {
 
-    const ok = confirm("🚫 Remover artigos SEM ISBN E SEM ISSN?");
+    const ok = confirm(
+        "🚫 Remover artigos sem ISBN e ISSN?"
+    );
+
     if (!ok) return;
 
     const { error } = await supabaseClient
-        .from("csvarticles")
-        .delete()
-        .or('and(ISBN.is.null,ISSN.is.null),and(ISBN.eq.,ISSN.eq.)');
+        .rpc("remover_artigos_sem_issn_isbn");
 
     if (error) {
         console.error(error);
-        showError("Erro ao remover artigos sem ISBN e ISSN");
+        showError(
+            "Erro ao remover artigos sem ISBN/ISSN"
+        );
         return;
     }
 
-    showSuccess("Artigos sem ISBN e ISSN removidos!");
+    showSuccess(
+        "Artigos sem ISBN e ISSN removidos!"
+    );
+
     loadArticles();
 }
 
@@ -325,21 +339,29 @@ async function deleteMissingISBNISSNHandler() {
 
 async function deleteMissingDOIHandler() {
 
-    const ok = confirm("🚫 Remover artigos sem DOI?");
+    const ok = confirm(
+        "🚫 Remover artigos sem DOI?"
+    );
+
     if (!ok) return;
 
     const { error } = await supabaseClient
-        .from("csvarticles")
+        .from("artigos")
         .delete()
-        .or('DOI.is.null,DOI.eq.')
+        .or('doi.is.null,doi.eq.');
 
     if (error) {
         console.error(error);
-        showError("Erro ao remover artigos sem DOI");
+        showError(
+            "Erro ao remover artigos sem DOI"
+        );
         return;
     }
 
-    showSuccess("Artigos sem DOI removidos!");
+    showSuccess(
+        "Artigos sem DOI removidos!"
+    );
+
     loadArticles();
 }
 

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Científico</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>📊 Dashboard Científico</h1>
+
+        <div class="header-actions">
+            <a href="index.html">📚 Biblioteca</a>
+        </div>
+    </header>
+
+    <div class="layout">
+
+        <main style="width:100%;padding:20px;">
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+                    <h3>Total de Artigos</h3>
+                    <span id="totalArtigos">0</span>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total de Autores</h3>
+                    <span id="totalAutores">0</span>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Total de Keywords</h3>
+                    <span id="totalKeywords">0</span>
+                </div>
+
+            </div>
+
+            <div class="charts-grid">
+
+                <div class="chart-container">
+                    <h2>Artigos por Ano</h2>
+                    <canvas id="articlesPerYear"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Top 10 Autores</h2>
+                    <canvas id="topAuthors"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Top 10 Keywords</h2>
+                    <canvas id="topKeywords"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Top 10 Periódicos</h2>
+                    <canvas id="topJournals"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Idiomas dos Artigos</h2>
+                    <canvas id="languagesChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h2>Top 10 Artigos Mais Citados</h2>
+                    <canvas id="mostCited"></canvas>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase.js"></script>
+    <script src="analytics.js"></script>
+
+</body>
+
+</html>
