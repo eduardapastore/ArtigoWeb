@@ -1,270 +1,411 @@
-const csvButton =
-  document.getElementById("importCSV");
+async function getOrCreate(table, uniqueColumn, value, extra = {}) {
 
-console.log("Botão encontrado:", csvButton);
+  if (!value || String(value).trim() === "") {
+      return null;
+  }
 
-if (csvButton) {
-  csvButton.addEventListener(
-    "click",
-    importarCSV
-  );
+  const { data: existing } = await supabaseClient
+      .from(table)
+      .select("id")
+      .eq(uniqueColumn, value)
+      .maybeSingle();
+
+  if (existing) {
+      return existing.id;
+  }
+
+  const { data, error } = await supabaseClient
+      .from(table)
+      .insert({
+          [uniqueColumn]: value,
+          ...extra
+      })
+      .select("id")
+      .single();
+
+  if (error) {
+      console.error(error);
+      return null;
+  }
+
+  return data.id;
 }
+
+document
+  .getElementById("importCSV")
+  ?.addEventListener("click", importarCSV);
 
 async function importarCSV() {
 
   const file =
-    document.getElementById("csvFile").files[0];
+      document.getElementById("csvFile").files[0];
 
   if (!file) {
-    alert("Selecione um arquivo CSV");
-    return;
+      alert("Selecione um CSV");
+      return;
   }
 
   Papa.parse(file, {
 
-    header: true,
-    skipEmptyLines: true,
+      header: true,
+      skipEmptyLines: true,
 
-    complete: async function (results) {
+      complete: async function(results) {
 
-      console.log("CSV processado");
-      console.log(results);
+          const rows = results.data;
 
-      if (results.errors.length > 0) {
-        console.error("Erros encontrados:", results.errors);
-      }
+          console.log("Total linhas:", rows.length);
 
-      const totalOriginal =
-        results.data.length;
+          let sucesso = 0;
+          let erros = 0;
 
-      const artigos =
-        results.data.map(row => ({
+          for (const row of rows) {
 
-          "Authors":
-            row["Authors"] || null,
+              try {
 
-          "Author full names":
-            row["Author full names"] || null,
+                  await importarArtigo(row);
 
-          "Author(s) ID":
-            row["Author(s) ID"] || null,
+                  sucesso++;
 
-          "Title":
-            row["Title"] || null,
+                  if (sucesso % 50 === 0) {
+                      console.log(
+                          `${sucesso} artigos processados`
+                      );
+                  }
 
-          "Year":
-            row["Year"]?.trim()
-              ? Number(row["Year"])
-              : null,
+              } catch (err) {
 
-          "Source title":
-            row["Source title"] || null,
+                  erros++;
 
-          "Volume":
-            row["Volume"] || null,
+                  console.error(
+                      "Erro artigo:",
+                      row["Title"],
+                      err
+                  );
+              }
+          }
 
-          "Issue":
-            row["Issue"] || null,
+          alert(`
+Importação concluída!
 
-          "Art. No.":
-            row["Art. No."] || null,
+Sucesso: ${sucesso}
+Erros: ${erros}
+          `);
 
-          "Page start":
-            row["Page start"] || null,
+      },
 
-          "Page end":
-            row["Page end"] || null,
+      error: function(error) {
 
-          "Cited by":
-            row["Cited by"]?.trim()
-              ? Number(row["Cited by"])
-              : null,
-
-          "DOI":
-            row["DOI"] || null,
-
-          "Link":
-            row["Link"] || null,
-
-          "Affiliations":
-            row["Affiliations"] || null,
-
-          "Authors with affiliations":
-            row["Authors with affiliations"] || null,
-
-          "Abstract":
-            row["Abstract"] || null,
-
-          "Author Keywords":
-            row["Author Keywords"] || null,
-
-          "Index Keywords":
-            row["Index Keywords"] || null,
-
-          "Molecular Sequence Numbers":
-            row["Molecular Sequence Numbers"] || null,
-
-          "Chemicals/CAS":
-            row["Chemicals/CAS"] || null,
-
-          "Tradenames":
-            row["Tradenames"] || null,
-
-          "Manufacturers":
-            row["Manufacturers"] || null,
-
-          "Funding Details":
-            row["Funding Details"] || null,
-
-          "Funding Texts":
-            row["Funding Texts"] || null,
-
-          "References":
-            row["References"] || null,
-
-          "Correspondence Address":
-            row["Correspondence Address"] || null,
-
-          "Editors":
-            row["Editors"] || null,
-
-          "Publisher":
-            row["Publisher"] || null,
-
-          "Sponsors":
-            row["Sponsors"] || null,
-
-          "Conference name":
-            row["Conference name"] || null,
-
-          "Conference date":
-            row["Conference date"] || null,
-
-          "Conference location":
-            row["Conference location"] || null,
-
-          "Conference code":
-            row["Conference code"] || null,
-
-          "ISSN":
-            row["ISSN"] || null,
-
-          "ISBN":
-            row["ISBN"] || null,
-
-          "CODEN":
-            row["CODEN"] || null,
-
-          "PubMed ID":
-            row["PubMed ID"] || null,
-
-          "Language of Original Document":
-            row["Language of Original Document"] || null,
-
-          "Abbreviated Source Title":
-            row["Abbreviated Source Title"] || null,
-
-          "Document Type":
-            row["Document Type"] || null,
-
-          "Publication Stage":
-            row["Publication Stage"] || null,
-
-          "Open Access":
-            row["Open Access"] || null,
-
-          "Source":
-            row["Source"] || null,
-
-          "EID":
-            row["EID"] || null
-
-        }));
-
-      console.log(
-        `Total CSV: ${totalOriginal}`
-      );
-
-      console.log(
-        "Primeiro registro:",
-        artigos[0]
-      );
-
-      if (artigos.length === 0) {
-        alert("Nenhum registro encontrado.");
-        return;
-      }
-
-      const batchSize = 500;
-
-      for (
-        let i = 0;
-        i < artigos.length;
-        i += batchSize
-      ) {
-
-        const lote =
-          artigos.slice(
-            i,
-            i + batchSize
-          );
-
-        console.log(
-          `Enviando lote ${
-            i / batchSize + 1
-          }`
-        );
-
-        const {
-          data,
-          error
-        } = await supabaseClient
-          .from("csvarticles")
-          .insert(lote)
-          .select();
-
-        if (error) {
-
-          console.error(
-            "Erro ao inserir lote:",
-            error
-          );
+          console.error(error);
 
           alert(
-            "Erro ao importar CSV:\n\n" +
-            error.message
+              "Erro ao processar CSV"
+          );
+      }
+  });
+}
+
+async function importarArtigo(row) {
+
+  /* ==========================
+     EVITA DUPLICADOS
+  ========================== */
+
+  if (row["DOI"]) {
+
+      const { data: existente } =
+          await supabaseClient
+              .from("artigos")
+              .select("id")
+              .eq("doi", row["DOI"])
+              .maybeSingle();
+
+      if (existente) return;
+  }
+
+  /* ==========================
+     PERIÓDICO
+  ========================== */
+
+  let periodicoId = null;
+
+  if (row["Source title"]) {
+
+      periodicoId =
+          await getOrCreate(
+              "periodicos",
+              "source_title",
+              row["Source title"],
+              {
+                  abbreviated_source_title:
+                      row["Abbreviated Source Title"],
+
+                  issn:
+                      row["ISSN"],
+
+                  isbn:
+                      row["ISBN"],
+
+                  coden:
+                      row["CODEN"],
+
+                  publisher:
+                      row["Publisher"]
+              }
+          );
+  }
+
+  /* ==========================
+     PUBLICAÇÃO
+  ========================== */
+
+  let publicacaoId = null;
+
+  if (periodicoId) {
+
+      const { data } =
+          await supabaseClient
+              .from("publicacoes")
+              .insert({
+                  periodico_id: periodicoId,
+                  volume: row["Volume"],
+                  issue: row["Issue"],
+                  art_no: row["Art. No."],
+                  page_start: row["Page start"],
+                  page_end: row["Page end"]
+              })
+              .select("id")
+              .single();
+
+      publicacaoId = data?.id;
+  }
+
+  /* ==========================
+     CONFERÊNCIA
+  ========================== */
+
+  let conferenciaId = null;
+
+  if (row["Conference name"]) {
+
+      conferenciaId =
+          await getOrCreate(
+              "conferencias",
+              "nome",
+              row["Conference name"],
+              {
+                  data:
+                      row["Conference date"],
+
+                  localizacao:
+                      row["Conference location"],
+
+                  codigo:
+                      row["Conference code"]
+              }
+          );
+  }
+
+  /* ==========================
+     ARTIGO
+  ========================== */
+
+  const { data: artigo, error } =
+      await supabaseClient
+          .from("artigos")
+          .insert({
+
+              title:
+                  row["Title"],
+
+              year:
+                  row["Year"]
+                      ? Number(row["Year"])
+                      : null,
+
+              abstract:
+                  row["Abstract"],
+
+              cited_by:
+                  row["Cited by"]
+                      ? Number(row["Cited by"])
+                      : 0,
+
+              doi:
+                  row["DOI"],
+
+              link:
+                  row["Link"],
+
+              correspondence_address:
+                  row["Correspondence Address"],
+
+              document_type:
+                  row["Document Type"],
+
+              publication_stage:
+                  row["Publication Stage"],
+
+              open_access:
+                  row["Open Access"],
+
+              source:
+                  row["Source"],
+
+              eid:
+                  row["EID"],
+
+              language_original:
+                  row["Language of Original Document"],
+
+              pubmed_id:
+                  row["PubMed ID"],
+
+              publicacao_id:
+                  publicacaoId,
+
+              conferencia_id:
+                  conferenciaId
+
+          })
+          .select("id")
+          .single();
+
+  if (error) {
+      throw error;
+  }
+
+  const artigoId = artigo.id;
+
+  /* ==========================
+     AUTORES
+  ========================== */
+
+  const autores =
+      (row["Author full names"] || "")
+          .split(";")
+          .map(a => a.trim())
+          .filter(Boolean);
+
+  for (let i = 0; i < autores.length; i++) {
+
+      const nome = autores[i];
+
+      const autorId =
+          await getOrCreate(
+              "autores",
+              "nome_completo",
+              nome
           );
 
-          return;
-        }
+      if (!autorId) continue;
 
-        console.log(
-          `Lote ${
-            i / batchSize + 1
-          } inserido`,
-          data
-        );
+      await supabaseClient
+          .from("artigo_autor")
+          .upsert({
+              artigo_id: artigoId,
+              autor_id: autorId,
+              ordem_autoria: i + 1
+          });
+  }
+
+  /* ==========================
+     KEYWORDS AUTOR
+  ========================== */
+
+  const authorKeywords =
+      (row["Author Keywords"] || "")
+          .split(";")
+          .map(k => k.trim())
+          .filter(Boolean);
+
+  for (const keyword of authorKeywords) {
+
+      const keywordId =
+          await getOrCreate(
+              "keywords",
+              "keyword",
+              keyword,
+              {
+                  tipo: "AUTHOR"
+              }
+          );
+
+      if (!keywordId) continue;
+
+      await supabaseClient
+          .from("artigo_keyword")
+          .upsert({
+              artigo_id: artigoId,
+              keyword_id: keywordId
+          });
+  }
+
+  /* ==========================
+     KEYWORDS INDEX
+  ========================== */
+
+  const indexKeywords =
+      (row["Index Keywords"] || "")
+          .split(";")
+          .map(k => k.trim())
+          .filter(Boolean);
+
+  for (const keyword of indexKeywords) {
+
+      const keywordId =
+          await getOrCreate(
+              "keywords",
+              "keyword",
+              keyword,
+              {
+                  tipo: "INDEX"
+              }
+          );
+
+      if (!keywordId) continue;
+
+      await supabaseClient
+          .from("artigo_keyword")
+          .upsert({
+              artigo_id: artigoId,
+              keyword_id: keywordId
+          });
+  }
+
+  /* ==========================
+     FINANCIAMENTOS
+  ========================== */
+
+  if (row["Funding Details"]) {
+
+      const { data: financiamento } =
+          await supabaseClient
+              .from("financiamentos")
+              .insert({
+                  funding_details:
+                      row["Funding Details"],
+
+                  funding_texts:
+                      row["Funding Texts"]
+              })
+              .select("id")
+              .single();
+
+      if (financiamento) {
+
+          await supabaseClient
+              .from("artigo_financiamento")
+              .insert({
+                  artigo_id: artigoId,
+                  financiamento_id:
+                      financiamento.id
+              });
       }
+  }
 
-      alert(
-        `${artigos.length} registros importados com sucesso!`
-      );
-
-    },
-
-    error: function (error) {
-
-      console.error(
-        "Erro ao processar CSV:",
-        error
-      );
-
-      alert(
-        "Erro ao processar CSV"
-      );
-
-    }
-
-  });
-
+  console.log(
+      "Importado:",
+      row["Title"]
+  );
 }

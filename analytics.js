@@ -15,17 +15,25 @@ async function loadDashboard() {
 
     await loadCards();
 
-    await loadArticlesPerYear();
+    await loadPublicationsYear();
+
+    await loadCitationsPerYear();
+
+    await loadTopJournals();
 
     await loadTopAuthors();
 
     await loadTopKeywords();
 
-    await loadTopJournals();
+    await loadOpenAccess();
 
     await loadLanguages();
 
-    await loadMostCited();
+    await loadConceptGroups();
+
+    await loadKeywordNetwork();
+
+    await loadCoauthorNetwork();
 }
 
 /* =======================
@@ -55,7 +63,7 @@ async function loadCards() {
    ARTIGOS POR ANO
 ======================= */
 
-async function loadArticlesPerYear() {
+async function loadPublicationsYear() {
 
     const { data } = await supabaseClient
         .from("artigos")
@@ -68,7 +76,7 @@ async function loadArticlesPerYear() {
     });
 
     new Chart(
-        document.getElementById("articlesPerYear"),
+        document.getElementById("publicationsYear"),
         {
             type: "line",
             data: {
@@ -76,6 +84,275 @@ async function loadArticlesPerYear() {
                 datasets: [{
                     label: "Artigos",
                     data: Object.values(grouped)
+                }]
+            }
+        }
+    );
+}
+
+async function loadCoauthorNetwork() {
+
+    const { data, error } = await supabaseClient
+        .from("artigo_autor")
+        .select(`
+            artigo_id,
+            autor_id,
+            autores(nome_completo)
+        `);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const articleMap = {};
+    const authorsMap = {};
+
+    data.forEach(row => {
+
+        const nome = row.autores?.nome_completo;
+
+        if (!nome) return;
+
+        authorsMap[row.autor_id] = nome;
+
+        if (!articleMap[row.artigo_id]) {
+            articleMap[row.artigo_id] = [];
+        }
+
+        articleMap[row.artigo_id].push(row.autor_id);
+    });
+
+    const nodes = [];
+    const edges = [];
+    const addedEdges = new Set();
+
+    Object.entries(authorsMap).forEach(([id, nome]) => {
+        nodes.push({
+            id,
+            label: nome
+        });
+    });
+
+    Object.values(articleMap).forEach(authors => {
+
+        for (let i = 0; i < authors.length; i++) {
+
+            for (let j = i + 1; j < authors.length; j++) {
+
+                const a = authors[i];
+                const b = authors[j];
+
+                const edgeKey =
+                    [a,b].sort().join("-");
+
+                if (addedEdges.has(edgeKey))
+                    continue;
+
+                addedEdges.add(edgeKey);
+
+                edges.push({
+                    from: a,
+                    to: b
+                });
+            }
+        }
+    });
+
+    const container =
+        document.getElementById("coauthorNetwork");
+
+    new vis.Network(
+        container,
+        {
+            nodes,
+            edges
+        },
+        {
+            physics:true
+        }
+    );
+}
+
+async function loadKeywordNetwork() {
+
+    const { data, error } = await supabaseClient
+        .from("artigo_keyword")
+        .select(`
+            artigo_id,
+            keyword_id,
+            keywords(keyword)
+        `);
+
+    if (error) {
+        console.error(error);
+        return;
+    }
+
+    const articleMap = {};
+    const keywordMap = {};
+
+    data.forEach(row => {
+
+        const keyword =
+            row.keywords?.keyword;
+
+        if (!keyword) return;
+
+        keywordMap[row.keyword_id] =
+            keyword;
+
+        if (!articleMap[row.artigo_id]) {
+            articleMap[row.artigo_id] = [];
+        }
+
+        articleMap[row.artigo_id]
+            .push(row.keyword_id);
+    });
+
+    const nodes = [];
+    const edges = [];
+    const addedEdges = new Set();
+
+    Object.entries(keywordMap)
+        .forEach(([id, keyword]) => {
+
+        nodes.push({
+            id,
+            label: keyword
+        });
+    });
+
+    Object.values(articleMap)
+        .forEach(keywords => {
+
+        for (let i = 0; i < keywords.length; i++) {
+
+            for (let j = i + 1; j < keywords.length; j++) {
+
+                const a = keywords[i];
+                const b = keywords[j];
+
+                const edgeKey =
+                    [a,b].sort().join("-");
+
+                if (addedEdges.has(edgeKey))
+                    continue;
+
+                addedEdges.add(edgeKey);
+
+                edges.push({
+                    from: a,
+                    to: b
+                });
+            }
+        }
+    });
+
+    const container =
+        document.getElementById("keywordNetwork");
+
+    new vis.Network(
+        container,
+        {
+            nodes,
+            edges
+        },
+        {
+            physics:true
+        }
+    );
+}
+
+async function loadCitationsPerYear() {
+
+    const { data } = await supabaseClient
+        .from("artigos")
+        .select("year,cited_by");
+
+    const grouped = {};
+
+    data.forEach(article => {
+
+        const year = article.year || "Sem Ano";
+
+        grouped[year] =
+            (grouped[year] || 0)
+            + (article.cited_by || 0);
+    });
+
+    new Chart(
+        document.getElementById("citationsYear"),
+        {
+            type: "line",
+            data: {
+                labels: Object.keys(grouped),
+                datasets: [{
+                    label: "Citações",
+                    data: Object.values(grouped)
+                }]
+            }
+        }
+    );
+}
+
+async function loadOpenAccess() {
+
+    const { data } = await supabaseClient
+        .from("artigos")
+        .select("open_access");
+
+    const map = {};
+
+    data.forEach(item => {
+
+        const access =
+            item.open_access || "Não informado";
+
+        map[access] =
+            (map[access] || 0) + 1;
+    });
+
+    new Chart(
+        document.getElementById("openAccessChart"),
+        {
+            type: "doughnut",
+            data: {
+                labels: Object.keys(map),
+                datasets: [{
+                    data: Object.values(map)
+                }]
+            }
+        }
+    );
+}
+
+async function loadConceptGroups() {
+
+    const { data } = await supabaseClient
+        .from("keywords")
+        .select("tipo");
+
+    const map = {};
+
+    data.forEach(item => {
+
+        const tipo =
+            item.tipo || "Não Informado";
+
+        map[tipo] =
+            (map[tipo] || 0) + 1;
+    });
+
+    new Chart(
+        document.getElementById("conceptGroups"),
+        {
+            type: "bar",
+            data: {
+                labels: Object.keys(map),
+                datasets: [{
+                    label: "Quantidade",
+                    data: Object.values(map)
                 }]
             }
         }
@@ -108,7 +385,7 @@ async function loadTopAuthors() {
 
     const sorted = Object.entries(map)
         .sort((a,b)=>b[1]-a[1])
-        .slice(0,10);
+        .slice(0,20);
 
     new Chart(
         document.getElementById("topAuthors"),
@@ -151,7 +428,7 @@ async function loadTopKeywords() {
 
     const sorted = Object.entries(map)
         .sort((a,b)=>b[1]-a[1])
-        .slice(0,10);
+        .slice(0,15);
 
     new Chart(
         document.getElementById("topKeywords"),
@@ -191,7 +468,7 @@ async function loadTopJournals() {
 
     const sorted = Object.entries(map)
         .sort((a,b)=>b[1]-a[1])
-        .slice(0,10);
+        .slice(0,15);
 
     new Chart(
         document.getElementById("topJournals"),
@@ -241,37 +518,7 @@ async function loadLanguages() {
     );
 }
 
-/* =======================
-   MAIS CITADOS
-======================= */
 
-async function loadMostCited() {
-
-    const { data } = await supabaseClient
-        .from("artigos")
-        .select("title,cited_by")
-        .order("cited_by",{ascending:false})
-        .limit(10);
-
-    new Chart(
-        document.getElementById("mostCited"),
-        {
-            type:"bar",
-            data:{
-                labels:data.map(x=>x.title.substring(0,30)),
-                datasets:[{
-                    label:"Citações",
-                    data:data.map(x=>x.cited_by || 0)
-                }]
-            }
-        }
-    );
-}
-
-document.addEventListener(
-    "DOMContentLoaded",
-    loadDashboard
-);
 
 document.addEventListener("DOMContentLoaded", async () => {
 

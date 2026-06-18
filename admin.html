@@ -1,7 +1,13 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Importar Base Científica</title>
+
+    <link rel="stylesheet" href="style.css">
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
@@ -9,21 +15,54 @@
 
 <body>
 
-<input
-type="file"
-id="csvFile"
-accept=".csv"
->
+    <header>
+        <h1>📥 Importação de Base Científica</h1>
 
-<button
-id="importCSV"
-type="button"
->
-Importar CSV
-</button>
+        <div class="header-actions">
+            <a href="index.html">📚 Biblioteca</a>
+            <a href="analytics.html">📊 Analytics</a>
+        </div>
+    </header>
 
-<script src="supabase.js"></script>
-<script src="admin.js"></script>
+    <main class="admin-container">
+
+        <div class="upload-card">
+
+            <h2>Importar Arquivo CSV</h2>
+
+            <p>
+                Selecione um arquivo exportado do Scopus para carregar os
+                artigos na base de dados.
+            </p>
+
+            <input
+                type="file"
+                id="csvFile"
+                accept=".csv"
+                class="file-input"
+            >
+
+            <button
+                id="importCSV"
+                type="button"
+                class="primary-btn"
+            >
+                🚀 Importar CSV
+            </button>
+
+            <div id="progressContainer" class="progress-container hidden">
+                <div id="progressBar" class="progress-bar"></div>
+            </div>
+
+            <div id="statusMessage"></div>
+
+        </div>
+
+    </main>
+
+    <script src="supabase.js"></script>
+    <script src="admin.js"></script>
 
 </body>
+
 </html>

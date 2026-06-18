@@ -394,3 +394,87 @@ tbody tr:hover{
         grid-template-columns: 1fr;
     }
 }
+
+.network-container{
+    width:100%;
+    height:700px;
+    border-radius:16px;
+    background:white;
+    margin-top:20px;
+}
+
+/* ======================
+   ADMIN
+====================== */
+
+.admin-container{
+    display:flex;
+    justify-content:center;
+    padding:40px;
+}
+
+.upload-card{
+    width:100%;
+    max-width:700px;
+
+    background:var(--card-bg,#fff);
+
+    padding:30px;
+
+    border-radius:16px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.upload-card h2{
+    margin-bottom:10px;
+}
+
+.upload-card p{
+    margin-bottom:25px;
+    color:#666;
+}
+
+.file-input{
+    width:100%;
+    padding:15px;
+    border:2px dashed #bbb;
+    border-radius:12px;
+    margin-bottom:20px;
+    cursor:pointer;
+}
+
+.primary-btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+
+    font-size:16px;
+    font-weight:bold;
+}
+
+.progress-container{
+    margin-top:20px;
+    width:100%;
+    height:24px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    transition:.3s;
+}
+
+.hidden{
+    display:none;
+}
+
+#statusMessage{
+    margin-top:15px;
+    font-weight:bold;
+}

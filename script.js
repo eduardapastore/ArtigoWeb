@@ -200,14 +200,44 @@ function renderArticles(list) {
 // MODAL
 // ===========================
 
-function showArticle(article) {
+async function showArticle(article) {
 
     const modal = document.getElementById("modal");
     const body = document.getElementById("modal-body");
 
     const title = article.Title || "Sem título";
-    const authors = article.Authors || "-";
-    const affiliation = article.Affiliations || "-";
+    const artigoId = article.id;
+
+const { data: autoresData } = await supabaseClient
+    .from("artigo_autor")
+    .select(`
+        ordem_autoria,
+        autores(nome_completo)
+    `)
+    .eq("artigo_id", artigoId)
+    .order("ordem_autoria");
+
+const autores = autoresData?.length
+    ? autoresData
+        .map(a => a.autores?.nome_completo)
+        .filter(Boolean)
+        .join("; ")
+    : "-";
+
+const { data: afiliacoesData } = await supabaseClient
+    .from("artigo_autor_afiliacao")
+    .select(`
+        afiliacoes(descricao)
+    `)
+    .eq("artigo_id", artigoId);
+
+const afiliacoes = afiliacoesData?.length
+    ? [...new Set(
+        afiliacoesData
+            .map(a => a.afiliacoes?.descricao)
+            .filter(Boolean)
+      )].join("<br>")
+    : "-";
     const year = article.Year || "-";
     const journal = article["Source title"] || "-";
     const doi = article.DOI || "-";
@@ -220,7 +250,7 @@ function showArticle(article) {
         </div>
 
         <div class="modal-grid">
-            <div class="modal-card"><div class="modal-label">Autores</div><div class="modal-value">${authors}</div></div>
+            <div class="modal-card"><div class="modal-label">Autores</div><div class="modal-value">${autores}</div></div>
             <div class="modal-card"><div class="modal-label">Ano</div><div class="modal-value">${year}</div></div>
             <div class="modal-card"><div class="modal-label">Periódico</div><div class="modal-value">${journal}</div></div>
             <div class="modal-card"><div class="modal-label">DOI</div><div class="modal-value">${doi}</div></div>
@@ -228,7 +258,7 @@ function showArticle(article) {
 
         <div class="modal-section">
             <div class="modal-label">Filiação</div>
-            <div class="modal-value">${affiliation}</div>
+            <div class="modal-value">${afiliacoes}</div>
         </div>
 
         <div class="modal-section">
